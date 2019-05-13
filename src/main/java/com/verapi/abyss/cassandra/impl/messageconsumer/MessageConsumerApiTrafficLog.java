@@ -1,12 +1,17 @@
 /*
+ * Copyright 2019 Verapi Inc
  *
- *  *  Copyright (C) Verapi Yazilim Teknolojileri A.S. - All Rights Reserved
- *  *
- *  *  Unauthorized copying of this file, via any medium is strictly prohibited
- *  *  Proprietary and confidential
- *  *
- *  *  Written by Halil Özkan <halil.ozkan@verapi.com>, 2 2019
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.verapi.abyss.cassandra.impl.messageconsumer;
@@ -39,14 +44,27 @@ public class MessageConsumerApiTrafficLog {
                 PreparedStatement preparedStatement = preparedStatementMap.get(Cqls.CQL_INSERT_TRAFFIC_LOG);
                 if (preparedStatement != null) {
                     cassandraClient.execute(preparedStatement.bind(
-                            UUID.fromString(messageApiTrafficLog.getString(ApiTraffic.ID))
+                            UUID.fromString(messageApiTrafficLog.getString(ApiTraffic.API_ID))
+                            , UUID.fromString(messageApiTrafficLog.getString(ApiTraffic.APP_ID))
                             , messageApiTrafficLog.getString(ApiTraffic.ACCEPT_ENCODING)
+                            , messageApiTrafficLog.getJsonObject(ApiTraffic.API).encode()
+                            , messageApiTrafficLog.getJsonObject(ApiTraffic.APP).encode()
                             , messageApiTrafficLog.getInteger(ApiTraffic.CONTENT_LENGTH)
                             , messageApiTrafficLog.getString(ApiTraffic.CONTENT_TYPE)
+                            , messageApiTrafficLog.getJsonObject(ApiTraffic.CONTRACT).encode()
+                            , UUID.fromString(messageApiTrafficLog.getString(ApiTraffic.CONTRACT_ID))
                             , messageApiTrafficLog.getJsonArray(ApiTraffic.COOKIES).encode()
+                            , UUID.fromString(messageApiTrafficLog.getString(ApiTraffic.CORRELATION_ID))
+                            , messageApiTrafficLog.getJsonObject(ApiTraffic.COUNTRY).encode()
+                            , UUID.fromString(messageApiTrafficLog.getString(ApiTraffic.COUNTRY_ID))
                             , messageApiTrafficLog.getString(ApiTraffic.HTTP_METHOD)
                             , messageApiTrafficLog.getString(ApiTraffic.HTTP_SESSION)
                             , messageApiTrafficLog.getString(ApiTraffic.HTTP_VERSION)
+                            , UUID.fromString(messageApiTrafficLog.getString(ApiTraffic.ID))
+                            , messageApiTrafficLog.getJsonObject(ApiTraffic.LICENSE).encode()
+                            , UUID.fromString(messageApiTrafficLog.getString(ApiTraffic.LICENSE_ID))
+                            , messageApiTrafficLog.getJsonObject(ApiTraffic.ORGANIZATION).encode()
+                            , UUID.fromString(messageApiTrafficLog.getString(ApiTraffic.ORGANIZATION_ID))
                             , messageApiTrafficLog.getString(ApiTraffic.REFERER)
                             , messageApiTrafficLog.getString(ApiTraffic.REMOTE_CLIENT)
                             , messageApiTrafficLog.getString(ApiTraffic.REQUEST_BODY)
@@ -64,7 +82,7 @@ public class MessageConsumerApiTrafficLog {
                             , messageApiTrafficLog.getLong(ApiTraffic.RESPONSE_BYTES_WRITTEN).intValue()
                             , messageApiTrafficLog.getJsonObject(ApiTraffic.RESPONSE_HEADERS).encode()
                             , messageApiTrafficLog.getInteger(ApiTraffic.RESPONSE_STATUS_CODE)
-                            , messageApiTrafficLog.getInstant(ApiTraffic.TIMESTAMP)
+                            , messageApiTrafficLog.getString(ApiTraffic.ROUTE)
                             , messageApiTrafficLog.getString(ApiTraffic.USER_AGENT)
                             , messageApiTrafficLog.getString(ApiTraffic.USERNAME)
                     ), event -> {

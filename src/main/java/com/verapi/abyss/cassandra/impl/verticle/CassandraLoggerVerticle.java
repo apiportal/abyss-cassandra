@@ -1,12 +1,17 @@
 /*
+ * Copyright 2019 Verapi Inc
  *
- *  *  Copyright (C) Verapi Yazilim Teknolojileri A.S. - All Rights Reserved
- *  *
- *  *  Unauthorized copying of this file, via any medium is strictly prohibited
- *  *  Proprietary and confidential
- *  *
- *  *  Written by Halil Özkan <halil.ozkan@verapi.com>, 2 2019
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.verapi.abyss.cassandra.impl.verticle;
@@ -41,16 +46,15 @@ public class CassandraLoggerVerticle extends AbstractVerticle {
 
     private static Logger logger = LoggerFactory.getLogger(CassandraLoggerVerticle.class);
 
-    private static List<String> queryList = new ArrayList<String>() {{
-        add(Cqls.CQL_INSERT_PLATFORM_API_LOG);
-        add(Cqls.CQL_INSERT_TRAFFIC_LOG);
-    }};
+    private static List<String> queryList = new ArrayList<>();
     private static Map<String, PreparedStatement> preparedStatementMap = new HashMap<>();
     private CassandraClient cassandraClient;
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
 
+        queryList.add(Cqls.CQL_INSERT_PLATFORM_API_LOG);
+        queryList.add(Cqls.CQL_INSERT_TRAFFIC_LOG);
         // Register codec for custom message
         //vertx.getDelegate().eventBus().registerDefaultCodec(MessageConsumerPlatformApiLog.class, new MessagePlatformApiLogCodec());
         vertx.eventBus().registerCodec(new MessagePlatformApiLogCodec());
@@ -106,11 +110,6 @@ public class CassandraLoggerVerticle extends AbstractVerticle {
                 .handler(new MessageConsumerApiTrafficLog().logWriter(preparedStatementMap, cassandraClient));
 
         super.start(startFuture);
-    }
-
-    @Override
-    public void stop(Future<Void> stopFuture) throws Exception {
-        super.stop(stopFuture);
     }
 
 }
